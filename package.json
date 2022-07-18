@@ -1,0 +1,26 @@
+{
+  "name": "next-p2p-chat",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "nanoid": "^4.0.0",
+    "next": "12.2.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "valtio": "^1.6.2",
+    "valtio-yjs": "^0.3.1",
+    "y-indexeddb": "^9.0.8",
+    "y-webrtc": "^10.2.3",
+    "yjs": "^13.5.39"
+  },
+  "devDependencies": {
+    "eslint": "8.20.0",
+    "eslint-config-next": "12.2.2"
+  }
+}
