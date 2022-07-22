@@ -3,13 +3,14 @@ import * as Y from "yjs";
 import { bindProxyAndYArray } from "valtio-yjs";
 import { proxy, useSnapshot } from "valtio";
 import { IndexeddbPersistence } from "../lib/y-indexeddb";
-import { nanoid } from "nanoid/non-secure";
 import { WebrtcProvider } from "y-webrtc";
 import styles from "./ChatRoom.module.css";
 
-export function useChatRoom(room = "default", password) {
+type WebrtcProviderOptions = ConstructorParameters<typeof WebrtcProvider>[2];
+
+export function useChatRoom<T>(room = "default", password?: string) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const store = useMemo(() => proxy([]), [room, password]);
+  const store = useMemo(() => proxy<T[]>([]), [room, password]);
 
   useEffect(() => {
     const docName = `next.chat.messages.${room}`;
@@ -19,7 +20,7 @@ export function useChatRoom(room = "default", password) {
     bindProxyAndYArray(store, yarray);
 
     new IndexeddbPersistence(docName, ydoc);
-    new WebrtcProvider(docName, ydoc, { password });
+    new WebrtcProvider(docName, ydoc, { password } as WebrtcProviderOptions);
 
     return () => {
       ydoc.destroy();
@@ -29,8 +30,22 @@ export function useChatRoom(room = "default", password) {
   return store;
 }
 
-export default function ChatRoom({ room = "default", password }) {
-  const messages = useChatRoom(room, password);
+type ChatRoomProps = {
+  room?: string;
+  password?: string;
+};
+
+type Message = {
+  id: string;
+  text: string;
+  createdAt: number;
+};
+
+export default function ChatRoom({
+  room = "default",
+  password,
+}: ChatRoomProps) {
+  const messages = useChatRoom<Message>(room, password);
   const snap = useSnapshot(messages);
 
   return (
@@ -58,13 +73,14 @@ export default function ChatRoom({ room = "default", password }) {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          const data = new FormData(event.target);
+          const form = event.target as HTMLFormElement;
+          const data = new FormData(form);
           messages.push({
-            id: nanoid(),
-            text: data.get("message"),
+            id: crypto.randomUUID(),
+            text: data.get("message") as string,
             createdAt: Date.now(),
           });
-          event.target.reset();
+          form.reset();
         }}
       >
         <input

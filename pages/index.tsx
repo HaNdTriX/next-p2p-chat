@@ -7,8 +7,8 @@ import About from "../components/About";
 export default function IndexPage() {
   const { query } = useRouter();
 
-  const room = query.room || "default";
-  const password = query.password;
+  const room = (query.room || "default") as string;
+  const password = query.password as string;
 
   return (
     <>

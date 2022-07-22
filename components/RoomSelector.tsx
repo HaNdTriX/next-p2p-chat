@@ -7,8 +7,13 @@ export default function RoomSelector() {
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        const data = new FormData(event.target);
-        push({ query: Object.fromEntries(data) });
+        const form = event.target as HTMLFormElement;
+        const data = new FormData(form);
+        push({
+          query: {
+            room: data.get("room") as string,
+          },
+        });
       }}
     >
       <h2>🕵️ Select a room</h2>
