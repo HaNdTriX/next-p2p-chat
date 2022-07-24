@@ -1,5 +1,3 @@
-interface WorkerGlobalScope {
-  __WB_DISABLE_DEV_LOGS: boolean;
-}
+(<any>self).__WB_DISABLE_DEV_LOGS = true;
 
-self.__WB_DISABLE_DEV_LOGS = true;
+export {};
